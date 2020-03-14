@@ -42,6 +42,10 @@ import java.util.List;
  * 测试呀测试
  * 测试热修复分支2
  */
+
+/**
+ * 测试分支
+ */
 @RestController
 @RequestMapping("/favorites")
 @Api(description = "收藏夹操作接口")
