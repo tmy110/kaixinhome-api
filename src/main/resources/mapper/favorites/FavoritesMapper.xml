@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaixin8848.home.web.favorites.dao.FavoritesMapper">
+    <resultMap id="BaseResultMap" type="com.kaixin8848.home.web.favorites.model.Favorites">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="favorites_name" jdbcType="VARCHAR" property="favoritesName"/>
+        <result column="url" jdbcType="VARCHAR" property="url"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="picture" jdbcType="VARCHAR" property="picture"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+    <!--    查询收藏夹-->
+    <select  id="findFavorites" parameterType="com.kaixin8848.home.web.favorites.pojo.in.FavoritesCondition"
+            resultMap="BaseResultMap">
+        SELECT * FROM favorites
+        <where>
+            <if test="userId!=null">
+                user_id=#{userId}
+            </if>
+        </where>
+        ORDER BY sort ASC
+    </select>
+
+
+
+</mapper>

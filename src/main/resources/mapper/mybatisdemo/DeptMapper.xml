@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaixin8848.home.web.mybatisdemo.dao.DeptMapper">
+    <resultMap id="BaseResultMap" type="com.kaixin8848.home.web.mybatisdemo.model.Dept">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+    </resultMap>
+    <select id="getDeptById" resultMap="BaseResultMap">
+          SELECT * FROM dept WHERE id=#{id}
+  </select>
+    <!--场景二:
+        查询部门的时候对应的所有员工信息也查询出来
+        select_resultMap_关联查询_collection定义关联集合封装
+    -->
+    <resultMap id="MyDept" type="com.kaixin8848.home.web.mybatisdemo.pojo.out.DeptInfo" extends="BaseResultMap">
+        <collection property="employees" ofType="com.kaixin8848.home.web.mybatisdemo.model.Employee">
+            <id column="eid" jdbcType="BIGINT" property="id"/>
+            <result column="last_name" jdbcType="VARCHAR" property="lastName"/>
+            <result column="gender" jdbcType="CHAR" property="gender"/>
+            <result column="email" jdbcType="VARCHAR" property="email"/>
+            <result column="d_id" jdbcType="BIGINT" property="dId"/>
+        </collection>
+    </resultMap>
+    <select id="getDeptByIdPlus" resultMap="MyDept">
+        SELECT
+        d.*,
+        e.id eid,e.last_name  last_name,e.email email, e.gender gender,e.d_id  d_id
+        FROM dept d
+        LEFT JOIN employee e ON d.id=e.d_id
+        WHERE d.id=#{id}
+    </select>
+    <!--select_resultMap_关联查询_collection分步查询-->
+    <resultMap id="MyDeptStep" type="com.kaixin8848.home.web.mybatisdemo.pojo.out.DeptInfo" extends="BaseResultMap">
+        <!--传多个值 column="{key1=colum1,key2=colum2}"  按需加载 fetchType="lazy" -->
+        <collection property="employees" select="com.kaixin8848.home.web.mybatisdemo.dao.EmployeeMapper.getEmpsByDeptId"
+                    column="{deptId=id}" fetchType="lazy">
+        </collection>
+    </resultMap>
+    <select id="getDeptByIdStep" resultMap="MyDeptStep">
+        SELECT * FROM dept WHERE id=#{id}
+    </select>
+
+</mapper>

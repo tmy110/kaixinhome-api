@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="error">
+    <!--先定义所有的appender-->
+    <appenders>
+        <!--这个输出控制台的配置-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）
+            *日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL
+            -->
+            <ThresholdFilter level="trace" onMatch="ACCEPT" onMismatch="DENY"/>
+            <!--输出日志的格式-->
+            <PatternLayout pattern="DateTime %d{yyyy-MM-dd HH:mm:ss} LogType %-5level %message %msg%n"/>
+        </Console>
+        <!--这个会打印出所有的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFile" fileName="/usr/local/tomcat/logs/kaixinhome-api/server.log"
+                     filePattern="/usr/local/tomcat/logs/kaixinhome-api/%d{yyyy-MM-dd}-%i.log">
+            <!--输出日志的格式-->
+            <PatternLayout pattern="DateTime %d{yyyy-MM-dd HH:mm:ss} LogType %-5level %msg %n"/>
+            <SizeBasedTriggeringPolicy size="1M"/>
+        </RollingFile>
+        <!--暂时没有调通 写入数据库配置，在Logger中设置日志级别为error-->
+        <JDBC name="databaseAppender" tableName="kaixinhome_log">
+            <ConnectionFactory class="com.kaixin8848.home.utility.Log4J2.ConnectionFactoryConfig"
+                               method="getDatabaseConnection"/>
+            <!--            <Column name="log_date" isEventTimestamp="true"/>-->
+            <Column name="log_date" pattern="%d{yyyy-MM-dd HH:mm:ss}"/>
+            <Column name="log_source" pattern="%logger"/>
+            <!--            <Column name="log_file" pattern="%file" />-->
+            <!--            <Column name="log_line" pattern="%l" />-->
+            <Column name="log_thread" pattern="%thread"/>
+            <Column name="log_level" pattern="%level"/>
+            <Column name="log_message" pattern="%message"/>
+        </JDBC>
+    </appenders>
+    <!--然后定义logger，只有定义了logger并引入的appender，appender才会生效-->
+    <loggers>
+        <!--建立一个默认的root的logger-->
+        <root level="info">
+            <appender-ref ref="Console"/>
+        </root>
+        <logger name="kaixinhome_log" level="info">
+            <appender-ref ref="RollingFile"/>
+<!--            <appender-ref ref="databaseAppender"/>-->
+        </logger>
+
+    </loggers>
+
+</configuration>
