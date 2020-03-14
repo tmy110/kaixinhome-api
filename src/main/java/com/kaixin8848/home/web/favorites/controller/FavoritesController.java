@@ -40,7 +40,7 @@ import java.util.List;
  */
 /**
  * 测试呀测试
- * 测试热修复分支
+ * 测试热修复分支2
  */
 @RestController
 @RequestMapping("/favorites")
