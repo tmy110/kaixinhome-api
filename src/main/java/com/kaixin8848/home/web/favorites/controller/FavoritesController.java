@@ -32,7 +32,7 @@ import java.util.List;
  * edit by 田满意119 5.0
  * 1234
  * 5678
- * 测试develop分支 000
+ * test develop分支
  */
 @RestController
 @RequestMapping("/favorites")
